@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Test New</title>
+</head>
+<body>
+    <h1>Webhook Test Page</h1>
+    <form id="myForm">
+        <label for="message">Message:</label><br>
+        <input type="text" id="message" name="message"><br>
+        <button type="submit" id="submitButton">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById("myForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            fetch('https://cn-cd-dx-tmp7.natfrp.cloud:53417/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log('Message sent successfully');
+            })
+            .catch(error => {
+                console.error('There was an error sending the message:', error);
+            });
+        });
+
+        // 获取URL中的查询参数并放入输入框
+        window.onload = function() {
+            var messageInput = document.getElementById("message");
+            var submitButton = document.getElementById("submitButton");
+            var queryString = window.location.search;
+            var urlParams = new URLSearchParams(queryString);
+            var paramValue = urlParams.get('message');
+            if(paramValue) {
+                messageInput.value = paramValue;
+                // 自动触发表单提交
+                submitButton.click();
+            }
+        };
+    </script>
+</body>
+</html>
